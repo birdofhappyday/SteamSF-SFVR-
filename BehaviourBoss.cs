@@ -76,6 +76,9 @@ public class BehaviourBoss : CharacterBehaviour
     private int                 m_bosshp;
     private bool                m_first;
     
+    /// <summary>
+    /// 애니메이션 start됬을때 실행되는 함수. 기본 변수들 세팅과 등장 애니메이션을 실행해준다.
+    /// </summary>
     public override void OnStart()
     {
         m_data.agent            = GetComponent<NavMeshAgent>();
@@ -137,6 +140,10 @@ public class BehaviourBoss : CharacterBehaviour
         //m_damagetestcorutineCommand = CoroutineManager.Instance.Register(Damage());
     }
 
+    /// <summary>
+    /// 공격당했을 때 실행되는 애니메이션 함수.
+    /// </summary>
+    /// <param name="damageData"></param>
     public override void OnAttacked(DamageData damageData)
     {
         m_bossHpBar[m_bossTargetpart].Damage(damageData.ResultDamage);
@@ -195,6 +202,10 @@ public class BehaviourBoss : CharacterBehaviour
         //UIManager.Instance.OpenDamageText(Character.m_actorUIData.hpPos, damageData.ResultDamage.ToString());
     }
 
+    /// <summary>
+    /// 죽었을 때 실행되는 애니메이션 함수.
+    /// </summary>
+    /// <param name="damagedata"></param>
     public override void OnDeath(DamageData damagedata = null)
     {
         //CoroutineManager.Instance.Unregister(m_damagetestcorutineCommand);
@@ -231,18 +242,18 @@ public class BehaviourBoss : CharacterBehaviour
         Character.AnimatorAction.Action(AnimatorState.Dead);
     }
 
+    /// <summary>
+    /// 개체가 꺼졋을 때 실행되는 함수. 상속받은 개체에서 행동을 결정한다.
+    /// </summary>
     public override void OnRestore()
     {
     }
 
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.X))
-    //    {
-    //        EventManager.Instance.Notify<IEventBossDead>((receiver) => receiver.BossDead(Character));
-    //    }
-    //}
-
+    /// <summary>
+    /// Hp UI의 값을 세팅해서 보여준다.
+    /// </summary>
+    /// <param name="curhp"></param>
+    /// <param name="maxhp"></param>
     private void Update_HpAction(float curhp, float maxhp)
     {
         for (int i = 0; i < m_hpState.Length; ++i)
@@ -269,7 +280,7 @@ public class BehaviourBoss : CharacterBehaviour
         }
     }
     
-    //타겟이 순차적으로 깜박입니다.
+    //공격 할 수 있는 타겟이 순차적으로 깜박입니다. 타겟이 공격받을 경우에만 데미지가 들어옵니다.
     private IEnumerator<CoroutinePhase> BosstargetFlicker()
     {
         float time = 0.0f;
@@ -277,7 +288,7 @@ public class BehaviourBoss : CharacterBehaviour
         while (m_first)
         {
             if (istarget)
-            {
+            {   
                 if (isactiveskill)
                 {
                     Character.AnimatorAction.Initialize<AnimatorActionBossAdd>();
@@ -342,7 +353,6 @@ public class BehaviourBoss : CharacterBehaviour
     /// </summary>
     /// <param name="pos"></param>
     /// <returns></returns>
-
     private int HpCheck(int pos)
     {
         for (int i = 0; i < m_bossHpCount; ++i)
@@ -377,6 +387,14 @@ public class BehaviourBoss : CharacterBehaviour
 
     //        DamageData data = new DamageData(InGameManager.Instance.Player, BodyPart.Torso, 1);
     //        Character.OnAttacked(data);
+    //    }
+    //}
+
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.X))
+    //    {
+    //        EventManager.Instance.Notify<IEventBossDead>((receiver) => receiver.BossDead(Character));
     //    }
     //}
 }
